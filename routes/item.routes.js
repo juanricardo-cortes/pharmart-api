@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const queries = require('../app/application/features/item/queries.js');
 const commands = require('../app/application/features/item/commands.js');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-router.post('/items', (req, res) => {
+router.post('/items', upload.single('image'), (req, res) => {
     commands.create(req, res);
 });
 

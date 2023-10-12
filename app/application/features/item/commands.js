@@ -1,6 +1,7 @@
 const writeItemRepository = require('../../../repositories/itemsrepository/item.write.js');
 const UpdateItemRequest = require('../../../entities/request/updateItemRequest.js');
-const Item = require('../../../entities/item.js');
+const firebaseService = require('../../../services/firebaseService');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     async create(req, res) {
@@ -8,9 +9,31 @@ module.exports = {
             return res.status(400).send();
         }
 
-        const newItem = await writeItemRepository.create(req.body);
+        const bucket = firebaseService.storage;
+        const filename = uuidv4();
+        const file = bucket.file(`images/${filename}.jpg`);
+        const imageBuffer = req.file.buffer; 
 
-        return res.status(200).json(newItem);
+        await file.save(imageBuffer, {
+            metadata: {
+              contentType: 'image/jpeg', // Adjust the content type as needed
+            },
+        });
+
+        const [url] = await file.getSignedUrl({ action: 'read', expires: '01-01-2100' });
+        const { name, description, price, quantity } = req.body;
+
+        const newItem = {
+            name,
+            description,
+            price: parseFloat(price),
+            image: url,
+            quantity: parseInt(quantity)
+        };
+
+        var result = await writeItemRepository.create(newItem);
+
+        return res.status(200).json(result);
     },
     async update(req, res) {
         if (!req.body) {
