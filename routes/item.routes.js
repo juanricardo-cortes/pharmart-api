@@ -14,16 +14,16 @@ router.get('/items', (req, res) => {
     queries.get(req, res);
 });
 
-router.get('/items/:id', (req, res) => {
-    queries.getById(req, res);
-});
-
-router.put('/items/:id', (req, res) => {
+router.put('/items', (req, res) => {
     commands.update(req, res);
 });
 
 router.delete('/items/:id', (req, res) => {
     commands.delete(req, res);
+});
+
+router.get('/items/:id', (req, res) => {
+    queries.getById(req, res);
 });
 
 module.exports = router;

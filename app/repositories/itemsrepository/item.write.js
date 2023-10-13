@@ -12,16 +12,21 @@ module.exports = {
     },
     async update(request) {
         const item = new Item(request);
-        await Item.updateOne({_id: request._id}, item)
-        .then((result) => {
-            if(result.nModified === 1) {
-                return true;
+        try {
+            const updatedItem = await Item.findOneAndUpdate(
+              { _id: item._id }, 
+              item,     
+              { new: true }    
+            );
+        
+            if (!updatedItem) {
+              throw new Error('Item not found');
             }
-            return false;
-        })
-        .catch(() => {
-            return false;
-        });
+        
+            return updatedItem;
+        } catch (error) {
+            throw new Error('Failed to update item');
+        }
     },
     async delete(id) { 
         Item.deleteOne({_id: id})

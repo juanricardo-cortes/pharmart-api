@@ -1,5 +1,5 @@
 const writeItemRepository = require('../../../repositories/itemsrepository/item.write.js');
-const UpdateItemRequest = require('../../../entities/request/updateItemRequest.js');
+const Item = require('../../../entities/item.js');
 const firebaseService = require('../../../services/firebaseService');
 const { v4: uuidv4 } = require('uuid');
 
@@ -40,11 +40,9 @@ module.exports = {
             return res.status(400).send();
         }
 
-        const requestItem = new UpdateItemRequest(req);
+        var result = await writeItemRepository.update(req.body);
 
-        var isUpdated = await writeItemRepository.update(requestItem);
-
-        return this.generateResponse(isUpdated, res);
+        return res.status(200).json(result);
     },
     async delete(req, res) {
         var isDeleted = await writeItemRepository.delete(req.params.id);
