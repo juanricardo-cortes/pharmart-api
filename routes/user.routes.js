@@ -11,4 +11,8 @@ router.get('/users', (req, res) => {
     queries.get(req, res);
 });
 
+router.get('/user', (req, res) => {
+    queries.getByUsernamePassword(req, res);
+});
+
 module.exports = router;

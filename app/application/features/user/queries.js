@@ -14,5 +14,11 @@ module.exports = {
         var user = await readUserRepository.getById(req.params.id);
 
         res.status(200).send(user);
+    },
+    async getByUsernamePassword(req, res) {
+        var user = await readUserRepository.getByUsernamePassword(req.query.username, req.query.password);
+
+        res.status(200).send(user);
     }
+
 }
