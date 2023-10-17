@@ -6,26 +6,17 @@ const Item = require('../../../entities/item.js');
 
 module.exports = {
     async checkout(req, res) {
-        if (!req.body.orders) {
+        if (!req.body) {
             return res.status(400).send();
         }
 
-        req.body.orders.forEach(async order => {
-            var isOrderSaved = await writeOrderRepository.create(order);
-            if(isOrderSaved === false) {
-                return response.status(409).send();
-            }
-
-            var itemDb = readItemRepository.getById(order.itemId);
-            var item = new Item(itemDb);
-
-            item.quantity -= order.quantity;
-            var isItemUpdated = await writeItemRepository.update(item);
-            if(isItemUpdated === false) {
-                return response.status(409).send();
-            }
+        req.body.forEach(async order => {
+            await writeOrderRepository.create(order);
+            var itemDb = await readItemRepository.getById(order.itemId);
+            itemDb.stock -= order.quantity;
+            await writeItemRepository.update(itemDb);
         });
 
-        return response.status(200).send();
+        return res.status(200).send();
     }
 }

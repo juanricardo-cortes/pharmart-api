@@ -25,7 +25,7 @@ module.exports = {
         
             return updatedItem;
         } catch (error) {
-            throw new Error('Failed to update item');
+            throw new Error('Failed to update item' + error);
         }
     },
     async delete(id) { 
