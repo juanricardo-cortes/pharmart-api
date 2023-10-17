@@ -21,14 +21,15 @@ module.exports = {
         });
 
         const [url] = await file.getSignedUrl({ action: 'read', expires: '01-01-2100' });
-        const { name, description, price, stock } = req.body;
+        const { name, description, price, stock, commission } = req.body;
 
         const newItem = {
             name,
             description,
             price: parseFloat(price),
             image: url,
-            stock: parseInt(stock)
+            stock: parseInt(stock),
+            commission: parseInt(commission)
         };
 
         var result = await writeItemRepository.create(newItem);
