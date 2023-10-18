@@ -10,7 +10,9 @@ module.exports = {
             return res.status(400).send();
         }
 
+        const createdAt = new Date();
         req.body.forEach(async order => {
+            order.createdAt = createdAt;
             await writeOrderRepository.create(order);
             var itemDb = await readItemRepository.getById(order.itemId);
             itemDb.stock -= order.quantity;
