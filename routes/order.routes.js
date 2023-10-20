@@ -12,4 +12,8 @@ router.get('/orders', (req, res) => {
     queries.get(req, res);
 });
 
+router.get('/track', (req, res) => {
+    queries.getTracks(req, res);
+})
+
 module.exports = router;
