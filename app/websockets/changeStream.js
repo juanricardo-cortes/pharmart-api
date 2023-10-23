@@ -6,7 +6,8 @@ module.exports = function (wss, DataModel) {
     dataChangeStream.on('change', (change) => {
       wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(change));
+            const message = { model: DataModel.modelName, change: change };
+            client.send(JSON.stringify(message));
         }
       });
     });
